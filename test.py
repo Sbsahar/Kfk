@@ -35,6 +35,10 @@ commands = [
     BotCommand('opengbt', 'تفعيل الذكاء الاصطناعي (للمشرفين فقط)'),
     BotCommand('closegbt', 'تعطيل الذكاء الاصطناعي (للمشرفين فقط)')
 ]
+def get_user_mention(user_id):
+    # هذه الدالة تقوم بإرجاع ذكر المستخدم مع اسم المستخدم الفعلي
+    user_name = bot.get_chat(user_id).username  # احصل على اسم المستخدم من المعرف
+    return f"<a href='tg://user?id={user_id}'>@{user_name}</a>"
 bot.set_my_commands(commands)
 def get_blackbox_response(user_input):
     """ إرسال استفسار إلى Blackbox AI واسترجاع الرد """
@@ -206,7 +210,14 @@ def process_media(content, file_extension, message, media_type):
         print(f"❌ خطأ في معالجة {media_type}: {e}")
         
                         
-        
+@bot.message_handler(commands=['id'])
+def send_group_id(message):
+    # التحقق إذا كانت الرسالة في مجموعة أو قناة
+    if message.chat.type in ['group', 'supergroup']:
+        group_id = message.chat.id
+        bot.send_message(message.chat.id, f"معرف هذه المجموعة هو: {group_id}")
+    else:
+        bot.send_message(message.chat.id, "هذا الأمر يعمل فقط في المجموعات!")        
 @bot.message_handler(content_types=['left_chat_member'])
 def handle_manual_ban(message):
     """تسجيل عمليات الطرد أو الحظر اليدوي وحفظها في التقرير اليومي"""
