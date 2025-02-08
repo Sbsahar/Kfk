@@ -213,14 +213,11 @@ def process_group_id_step(message):
     except ValueError:
         bot.send_message(message.chat.id, "❌ يرجى إدخال ID صحيح للمجموعة.")        
 @bot.message_handler(commands=['id'])
-def send_group_id(message):
-    # التأكد من أن الرسالة جاءت من مجموعة
+def send_chat_id(message):
     if message.chat.type == 'supergroup' or message.chat.type == 'group':
-        # عرض ID المجموعة
-        bot.reply_to(message, f"معرف المجموعة هو: {message.chat.id}")
+        bot.reply_to(message, f"Group ID: {message.chat.id}")
     else:
-        # إذا كانت الدردشة ليست مجموعة
-        bot.reply_to(message, "هذا المكان ليس مجموعة. فقط في المجموعات يمكن الحصول على المعرف.")        
+        bot.reply_to(message, "This is not a group. Only groups support this command.")        
 @bot.message_handler(commands=['gbt'])
 def handle_gbt_command(message):
     """ التعامل مع الأمر /gbt """
