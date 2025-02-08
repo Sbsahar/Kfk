@@ -180,7 +180,22 @@ def handle_edited_media(message):
     elif message.video:
         handle_video(message)
 
-@bot.message_handler
+@bot.message_handler(commands=['start'])
+def send_welcome(message):
+    """رسالة الترحيب"""
+    welcome_msg = (
+        "🛡️ <b>مرحبًا بك في بوت الحماية الذكي!</b>\n\n"
+        "مهام البوت:\n"
+        "1. حذف المحتوى غير اللائق تلقائيًا\n"
+        "2. تقييد الأعضاء بعد 10 مخالفات\n"
+        "3. مراقبة الصور المتحركة والفيديوهات\n\n"
+        "🔒 لتفعيل الحماية الكاملة:\n"
+        "1. أضف البوت إلى مجموعتك\n"
+        "2. امنحه صلاحيات المشرف\n"
+        "3. أضف البوت المساعد @Masaeeddbot"
+    )
+    bot.send_message(message.chat.id, welcome_msg, parse_mode="HTML")
+
 @bot.message_handler(commands=['sb'])
 def developer_check(message):
     """فحص حالة البوت للمطور"""
@@ -196,3 +211,4 @@ while True:
     except Exception as e:
         print(f"حدث خطأ: {e}")
         time.sleep(15)
+    
