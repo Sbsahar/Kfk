@@ -675,13 +675,13 @@ def handle_sb_command(message):
     else:
         bot.reply_to(message, "🚫 هذا الأمر مخصص للمطور فقط.")
 @bot.message_handler(commands=['id'])
-def handle_id(message):
-    """عرض ID للمجموعة فقط"""
-    if message.chat.type == 'private':
-        bot.reply_to(message, "🚫 هذا الأمر مخصص للمجموعات فقط!")
+def handle_group_id(message):
+    """الرد بمعرف المجموعة عند استخدام الأمر /id"""
+    chat_type = message.chat.type
+    if chat_type in ['group', 'supergroup']:
+        bot.reply_to(message, f"🆔 معرف المجموعة الحالية: <code>{message.chat.id}</code>", parse_mode="HTML")
     else:
-        group_id = message.chat.id  # استخراج ID المجموعة
-        bot.reply_to(message, f"ID للمجموعة: {group_id}")
+        bot.reply_to(message, "⚠️ هذا الأمر يعمل فقط داخل المجموعات!")
 
 def schedule_daily_report(group_id):
     """جدولة إرسال التقرير اليومي تلقائيًا كل 24 ساعة"""
@@ -741,6 +741,7 @@ commands = [
       telebot.types.BotCommand("closegbt", "للمشرف فقط (تعطيل الذكاء بلمجموعة)"),
        telebot.types.BotCommand("gbt", "الذكاء الأصطناعي gbt-4 (ارسل رسالتك للذكاء مع الأمر)"),
 telebot.types.BotCommand("enable_reports", "تفعيل إرسال التقارير اليومية لمجموعتك"),
+    telebot.types.BotCommand("id", "عرض معرف المجموعة الحالية"),
            
 ]
 bot.set_my_commands(commands)
