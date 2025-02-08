@@ -203,12 +203,5 @@ def developer_check(message):
         bot.reply_to(message, "✅ البوت يعمل بشكل طبيعي")
     else:
         bot.delete_message(message.chat.id, message.message_id)
-
-# تشغيل البوت
-while True:
-    try:
-        bot.polling(none_stop=True)
-    except Exception as e:
-        print(f"حدث خطأ: {e}")
-        time.sleep(15)
+        
     
