@@ -676,12 +676,14 @@ def handle_sb_command(message):
         bot.reply_to(message, "🚫 هذا الأمر مخصص للمطور فقط.")
 @bot.message_handler(commands=['id'])
 def send_chat_id(message):
-    """عرض ID للمجموعة إذا كانت من مجموعة أو سوبر"""
-    if message.chat.type in ['group', 'supergroup']:  # التحقق إذا كانت من مجموعة
+    """عرض ID للمجموعة فقط"""
+    if message.chat.type == 'private':  # التأكد أن البوت ليس في محادثة خاصة
+        bot.reply_to(message, "🚫 هذا الأمر لا يعمل في المحادثات الخاصة. يجب أن يكون في مجموعة فقط.")
+    elif message.chat.type in ['group', 'supergroup']:  # التأكد إذا كانت المجموعة أو سوبرغروب
         chat_id = message.chat.id
         bot.reply_to(message, f"Group ID: {chat_id}\nاضغط لنسخ المعرف: {chat_id}")
     else:
-        bot.reply_to(message, "🚫 هذا ليس مكانًا صالحًا للأمر. فقط في المجموعات.")
+        bot.reply_to(message, "🚫 هذا ليس مكانًا صالحًا للأمر.")
 
 def schedule_daily_report(group_id):
     """جدولة إرسال التقرير اليومي تلقائيًا كل 24 ساعة"""
