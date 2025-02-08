@@ -6,7 +6,7 @@ import time
 import json
 from telebot.types import BotCommand
 # توكن البوت ومفتاح API
-TOKEN = '7942028086:AAEwq8CaFeYSSXtSuBWwCCQ3BDtaaX3BZhI'
+TOKEN = '8196365414:AAEhieN1AcfDjp2PopggozmnZdqpept97ow'
 api_key = "sk_b34dcf68d51bee17991c066ead5eeb94fd72b26d5e73267d096f851420397bfaa1ac6a2482a141cdc8e07565b7a6ca0ddec607f8f5df31c3bc7be55cb6d14ffa024RooBLphN0iXkbKBufH"
 CHANNEL_URL = 'https://t.me/SYR_SB'
 CHANNEL_USERNAME = 'SYR_SB' 
@@ -212,7 +212,15 @@ def process_group_id_step(message):
         schedule_daily_report(group_id)
     except ValueError:
         bot.send_message(message.chat.id, "❌ يرجى إدخال ID صحيح للمجموعة.")        
-        
+@bot.message_handler(commands=['id'])
+def send_group_id(message):
+    # التأكد من أن الرسالة جاءت من مجموعة
+    if message.chat.type == 'supergroup' or message.chat.type == 'group':
+        # عرض ID المجموعة
+        bot.reply_to(message, f"معرف المجموعة هو: {message.chat.id}")
+    else:
+        # إذا كانت الدردشة ليست مجموعة
+        bot.reply_to(message, "هذا المكان ليس مجموعة. فقط في المجموعات يمكن الحصول على المعرف.")        
 @bot.message_handler(commands=['gbt'])
 def handle_gbt_command(message):
     """ التعامل مع الأمر /gbt """
