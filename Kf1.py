@@ -674,6 +674,7 @@ def handle_sb_command(message):
         bot.reply_to(message, "نعم عزيزي المطور البوت يعمل بنجاح 💪")
     else:
         bot.reply_to(message, "🚫 هذا الأمر مخصص للمطور فقط.")
+
 @bot.message_handler(commands=['id'])
 def handle_group_id(message):
     """الرد بمعرف المجموعة عند استخدام الأمر /id"""
@@ -682,7 +683,6 @@ def handle_group_id(message):
         bot.reply_to(message, f"🆔 معرف المجموعة الحالية: <code>{message.chat.id}</code>", parse_mode="HTML")
     else:
         bot.reply_to(message, "⚠️ هذا الأمر يعمل فقط داخل المجموعات!")
-
 def schedule_daily_report(group_id):
     """جدولة إرسال التقرير اليومي تلقائيًا كل 24 ساعة"""
     def send_report():
@@ -737,12 +737,11 @@ commands = [
     telebot.types.BotCommand("unban", "إلغاء حظر عضو (بالرد، الأيدي، أو اليوزرنيم)"),
     telebot.types.BotCommand("mute", "تقييد عضو من الكتابة (بالرد، الأيدي، أو اليوزرنيم)"),
     telebot.types.BotCommand("unmute", "إلغاء تقييد عضو (بالرد، الأيدي، أو اليوزرنيم)"),
-     telebot.types.BotCommand("opengbt", "للمشرف فقط (تفعيل الذكاء بلمجموعة)"),
-      telebot.types.BotCommand("closegbt", "للمشرف فقط (تعطيل الذكاء بلمجموعة)"),
-       telebot.types.BotCommand("gbt", "الذكاء الأصطناعي gbt-4 (ارسل رسالتك للذكاء مع الأمر)"),
-telebot.types.BotCommand("enable_reports", "تفعيل إرسال التقارير اليومية لمجموعتك"),
-    telebot.types.BotCommand("id", "عرض معرف المجموعة الحالية"),
-           
+    telebot.types.BotCommand("opengbt", "للمشرف فقط (تفعيل الذكاء بلمجموعة)"),
+    telebot.types.BotCommand("closegbt", "للمشرف فقط (تعطيل الذكاء بلمجموعة)"),
+    telebot.types.BotCommand("gbt", "الذكاء الأصطناعي gbt-4 (ارسل رسالتك للذكاء مع الأمر)"),
+    telebot.types.BotCommand("enable_reports", "تفعيل إرسال التقارير اليومية لمجموعتك"),
+    telebot.types.BotCommand("id", "عرض معرف المجموعة الحالية")  # الأمر الجديد
 ]
 bot.set_my_commands(commands)
 try:
