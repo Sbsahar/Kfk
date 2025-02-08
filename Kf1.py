@@ -675,16 +675,13 @@ def handle_sb_command(message):
     else:
         bot.reply_to(message, "🚫 هذا الأمر مخصص للمطور فقط.")
 @bot.message_handler(commands=['id'])
-def send_chat_id(message):
+def handle_id(message):
     """عرض ID للمجموعة فقط"""
-    try:
-        chat_info = bot.get_chat(message.chat.id)  # الحصول على معلومات الدردشة
-        if chat_info.type in ['group', 'supergroup']:  # التحقق إذا كانت مجموعة
-            bot.reply_to(message, f"Group ID: {message.chat.id}\nاضغط لنسخ المعرف: {message.chat.id}")
-        else:
-            bot.reply_to(message, "🚫 هذا الأمر مخصص للمجموعات فقط!")
-    except Exception as e:
-        bot.reply_to(message, f"🚫 حدث خطأ: {str(e)}")
+    if message.chat.type == 'private':
+        bot.reply_to(message, "🚫 هذا الأمر مخصص للمجموعات فقط!")
+    else:
+        group_id = message.chat.id  # استخراج ID المجموعة
+        bot.reply_to(message, f"ID للمجموعة: {group_id}")
 
 def schedule_daily_report(group_id):
     """جدولة إرسال التقرير اليومي تلقائيًا كل 24 ساعة"""
