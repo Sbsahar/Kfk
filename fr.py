@@ -180,7 +180,7 @@ def handle_edited_media(message):
     elif message.video:
         handle_video(message)
 
-@bot.message_handler(commands=['start'])
+@bot.message_handler(commands=['start1'])
 def send_welcome(message):
     """رسالة الترحيب"""
     welcome_msg = (
