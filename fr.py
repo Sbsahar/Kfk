@@ -205,12 +205,17 @@ def developer_check(message):
     else:
         bot.delete_message(message.chat.id, message.message_id)
 
-def start_bot():
-    """الدالة التي تحتوي على بوت polling"""
-    bot.polling(none_stop=True)
+def start_bot_sub():
+    try:
+        print("🚀 تشغيل البوت الفرعي...")
+        bot_sub.infinity_polling()  # تشغيل البوت الفرعي
+    except Exception as e:
+        print(f"🚨 حدث خطأ في البوت الفرعي: {e}")
 
-# تشغيل البوت في خيط منفصل
-bot_thread = threading.Thread(target=start_bot)
-bot_thread.start()
+# تشغيل الخيط للبوت الفرعي
+if __name__ == '__main__':
+    thread_sub = threading.Thread(target=start_bot_sub)
+    thread_sub.start()  # تشغيل البوت الفرعي في خيط منفصل
 
-print("🚀 البوت يعمل الآن في خيط منفصل!")
+    # انتظار الخيط ليكتمل
+    thread_sub.join()
