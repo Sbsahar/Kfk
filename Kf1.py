@@ -212,12 +212,7 @@ def process_group_id_step(message):
         schedule_daily_report(group_id)
     except ValueError:
         bot.send_message(message.chat.id, "❌ يرجى إدخال ID صحيح للمجموعة.")        
-@bot.message_handler(commands=['id'])
-def send_chat_id(message):
-    if message.chat.type == 'supergroup' or message.chat.type == 'group':
-        bot.reply_to(message, f"Group ID: {message.chat.id}")
-    else:
-        bot.reply_to(message, "This is not a group. Only groups support this command.")        
+        
 @bot.message_handler(commands=['gbt'])
 def handle_gbt_command(message):
     """ التعامل مع الأمر /gbt """
@@ -679,7 +674,14 @@ def handle_sb_command(message):
         bot.reply_to(message, "نعم عزيزي المطور البوت يعمل بنجاح 💪")
     else:
         bot.reply_to(message, "🚫 هذا الأمر مخصص للمطور فقط.")
-
+@bot.message_handler(commands=['id'])
+def send_chat_id(message):
+    """عرض ID للمجموعة إذا كانت من مجموعة أو سوبر"""
+    if message.chat.type in ['group', 'supergroup']:  # التحقق إذا كانت من مجموعة
+        chat_id = message.chat.id
+        bot.reply_to(message, f"Group ID: {chat_id}\nاضغط لنسخ المعرف: {chat_id}")
+    else:
+        bot.reply_to(message, "🚫 هذا ليس مكانًا صالحًا للأمر. فقط في المجموعات.")
 
 def schedule_daily_report(group_id):
     """جدولة إرسال التقرير اليومي تلقائيًا كل 24 ساعة"""
