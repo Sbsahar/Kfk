@@ -6,6 +6,7 @@ import moviepy.editor as mp
 from PIL import Image
 import tempfile
 import json
+import threading
 
 # إعدادات البوت
 TOKEN = '7942028086:AAEwq8CaFeYSSXtSuBWwCCQ3BDtaaX3BZhI'
@@ -203,5 +204,13 @@ def developer_check(message):
         bot.reply_to(message, "✅ البوت يعمل بشكل طبيعي")
     else:
         bot.delete_message(message.chat.id, message.message_id)
-        
-    
+
+def start_bot():
+    """الدالة التي تحتوي على بوت polling"""
+    bot.polling(none_stop=True)
+
+# تشغيل البوت في خيط منفصل
+bot_thread = threading.Thread(target=start_bot)
+bot_thread.start()
+
+print("🚀 البوت يعمل الآن في خيط منفصل!")
