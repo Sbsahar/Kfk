@@ -744,11 +744,14 @@ telebot.types.BotCommand("enable_reports", "تفعيل إرسال التقاري
            
 ]
 bot.set_my_commands(commands)
-def start_bot():
-    bot.polling(non_stop=True)
+def start_bot_main():
+    try:
+        print("🚀 تشغيل البوت الأساسي...")
+        bot_main.infinity_polling()  # تشغيل البوت الأساسي
+    except Exception as e:
+        print(f"🚨 حدث خطأ في البوت الأساسي: {e}")
 
-# تشغيل البوت في خيط منفصل
-bot_thread = threading.Thread(target=start_bot)
-bot_thread.start()
-
-print("تم تشغيل البوت الأساسي في خيط منفصل!")
+# تشغيل الخيط للبوت الأساسي
+if __name__ == '__main__':
+    thread_main = threading.Thread(target=start_bot_main)
+    thread_main.start()  # تشغيل البوت الأساسي في
