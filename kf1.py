@@ -11,6 +11,7 @@ api_key = "sk_b34dcf68d51bee17991c066ead5eeb94fd72b26d5e73267d096f851420397bfaa1
 CHANNEL_URL = 'https://t.me/SYR_SB'
 CHANNEL_USERNAME = 'SYR_SB' 
 DEVELOPER_CHAT_ID = '6789179634'
+DEVELOPER_CHAT_ID = 6789179634
 bot = telebot.TeleBot(TOKEN)
 users = set()
 groups = set()
@@ -433,38 +434,77 @@ def handle_manual_ban(message):
 def get_user_info(message):
     chat_id = message.chat.id
     user_id = message.from_user.id
-    
+
     # استخراج معلومات المستخدم المستهدف
     target_id, target_username = extract_user_info(bot, message)
     if not target_id:
-        bot.reply_to(message, "🔎 **كيفية استخدام الأمر:**\n"
-                              "1️⃣ بالرد على رسالة العضو: `/info`\n"
-                              "2️⃣ باستخدام الأيدي `/`  `/info 12345`\n", parse_mode="Markdown")
+        bot.reply_to(
+            message, 
+            "🔎 <b>كيفية استخدام الأمر:</b>\n"
+            "1️⃣ <b>بالرد على رسالة العضو:</b> <code>/info</code>\n"
+            "2️⃣ <b>باستخدام الآيدي:</b> <code>/info 12345</code>", 
+            parse_mode="HTML"
+        )
         return
 
     try:
-        # جلب بيانات العضو من المجموعة
-        chat_member = bot.get_chat_member(chat_id, target_id)
-        user = chat_member.user  # هذا يحل المشكلة
-        
-        is_premium = "💎 بريميوم" if getattr(user, "is_premium", False) else "👤 عادي"
-        violation_count = user_violations.get(target_id, 0)  # عدد المخالفات
+        target_id = int(target_id)
+        print(f"target_id: {target_id}, DEVELOPER_CHAT_ID: {DEVELOPER_CHAT_ID}")
 
-        # تجهيز الرسالة بتنسيق جميل
+        # إذا كان المستخدم هو المطور
+        if target_id == DEVELOPER_CHAT_ID:
+            role = "👑 <b>المطور الأساسي</b>"
+            header = "👑 <b>معلومات المطور:</b>\n"
+            # محاولة استخدام الرسالة المردود عليها إذا كانت موجودة
+            if message.reply_to_message:
+                user = message.reply_to_message.from_user
+            else:
+                user = bot.get_chat(target_id)
+        else:
+            header = "📌 <b>معلومات العضو</b>\n"
+            if chat_id < 0:  # داخل مجموعة
+                chat_member = bot.get_chat_member(chat_id, target_id)
+                user = chat_member.user
+                status = chat_member.status
+                role = "🔰 <b>مشرف</b>" if status in ["creator", "administrator"] else "👤 <b>عضو</b>"
+            else:
+                user = bot.get_chat(target_id)
+                role = "👤 <b>عضو</b>"
+
+        is_premium = "💎 <b>بريميوم</b>" if getattr(user, "is_premium", False) else "👤 <b>عادي</b>"
+        violation_count = user_violations.get(target_id, 0)
+
         info_message = (
-            f"📌 <b>معلومات العضو</b>\n"
-            f"━━━━━━━━━━━━━━━━━━\n"
+            header +
+            "━━━━━━━━━━━━━━━━━━\n"
             f"👤 <b>الاسم:</b> {user.first_name}\n"
             f"📎 <b>اليوزر:</b> @{user.username if user.username else '🚫 لا يوجد'}\n"
             f"🆔 <b>الآيدي:</b> <code>{target_id}</code>\n"
-            f"⚠️ <b>عدد المخالفات:</b> {violation_count} مخالفة\n"
-            f"🏅 <b>نوع الحساب:</b> {is_premium}\n"
-            f"━━━━━━━━━━━━━━━━━━"
+            f"🏅 <b>الرتبة:</b> {role}\n"
+            f"⚠️ <b>المخالفات:</b> {violation_count}\n"
+            f"🏆 <b>النوع:</b> {is_premium}\n"
+            "━━━━━━━━━━━━━━━━━━"
         )
 
         bot.send_message(chat_id, info_message, parse_mode="HTML")
     except Exception as e:
-        bot.reply_to(message, f"🚫 حدث خطأ أثناء جلب المعلومات: {e}")        
+        bot.reply_to(
+            message, 
+            f"🚫 <b>خطأ:</b>\n<code>{e}</code>", 
+            parse_mode="HTML"
+        )
+
+def extract_user_info(bot, message):
+    # إذا تم الرد على رسالة
+    if message.reply_to_message:
+        user = message.reply_to_message.from_user
+        return user.id, user.username
+    # إذا تم استخدام الآيدي مع الأمر
+    elif len(message.text.split()) > 1:
+        target_id = message.text.split()[1]
+        return target_id, None
+    else:
+        return None, None        
         
 @bot.message_handler(content_types=['photo'])
 def handle_photo(message):
